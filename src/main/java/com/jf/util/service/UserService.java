@@ -1,5 +1,6 @@
 package com.jf.util.service;
 
+import com.jf.util.common.ResultVo;
 import com.jf.util.entity.User;
 
 /**
@@ -11,7 +12,9 @@ import com.jf.util.entity.User;
  * @since 2021/7/25 14:10
  */
 public interface UserService {
-    User insertUser(User user);
+    void register(User user);
 
-    User selectUser(String mobile);
+    ResultVo login(User user);
+
+    ResultVo info(String token);
 }
