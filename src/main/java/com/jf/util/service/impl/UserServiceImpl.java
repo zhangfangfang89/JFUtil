@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         Token token = new Token();
         token.setToken(u.getUsername());
 
-        resultVo.setCode(0);
+        resultVo.setCode(20000);
         resultVo.setData(token);
         resultVo.setMessage("登录成功");
         return resultVo;
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         jsonObject.put("avatar","");
         jsonObject.put("name","");
         ResultVo resultVo = new ResultVo();
-        resultVo.setCode(0);
+        resultVo.setCode(20000);
         resultVo.setMessage("登录成功2");
         resultVo.setData(jsonObject);
         return resultVo;

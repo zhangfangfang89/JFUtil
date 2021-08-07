@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jf.util.dao.UserDao">
+
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         insert into user(username, mobile, password, token)
         values (#{userName}, #{mobile}, #{passWord}, #{token})
@@ -23,6 +24,6 @@
         username,
         token
         from user
-        where username = #{username}
+        where username = '#{username}'
     </select>
 </mapper>

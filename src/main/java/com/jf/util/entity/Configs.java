@@ -9,9 +9,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class config {
+public class Configs {
     private int id;
-    private String name;
-    private String value;
+    private String keys;
+    private String text;
+    private String mobile;
     private String password;
 }
