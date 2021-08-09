@@ -1,5 +1,7 @@
 package com.jf.util.pplogin;
 
+import com.jf.util.common.HttpRequestBase;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.BufferedReader;
@@ -76,7 +78,7 @@ public class PassportLogin {
 
             headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
             headers.put("Referer", "http://passport.58.com/login?path=https://my.58.com/index");
-
+            headers.put("Content-Type","application/x-www-form-urlencoded; charset=utf-8");
 //			headers.put("Cookie", "id58=c5/nn1wzLTU1FddXQuS8Ag==;xxzl_deviceid=NGYbXzjBKiH5gA4dLc1wFmQ3gI5T4DcK1WOSHyfghH9ZiiOLWenkbZiDF3HC9%2FpC;xxzl_smartid=1489b092b978d2a77a1b26e7ea1bef57");
 
             // 实例化表单参数
@@ -93,7 +95,7 @@ public class PassportLogin {
 //			parameters.put("fingerprint", "E6D8D34F98D5D9E47513B35B5C2C4DAA942F7DE13D4037FE_011");
             parameters.put("fingerprint", "A65596227BC820F5F685737F7FC0D4F1092B0D6D806749E7_011");
             parameters.put("finger2", "zh-CN|24|1|4|1366_768|1366_728|-480|1|1|1|undefined|1|unknown|Win32|unknown|3|false|false|false|false|false|0_false_false|d41d8cd98f00b204e9800998ecf8427e|b20e9276e5b8fff7cfacdad587b5ea41");
-
+//            HttpRequestBase.doPost("http://passport.58.com/login/pc/dologi",parameters, headers);
             NewHttpRequestProxy hrp = new NewHttpRequestProxy();
 
             String[] temp = null;

@@ -5,8 +5,8 @@
 
 <mapper namespace="com.jf.util.dao.ConfigsDao">
     <insert id="insertConfig" useGeneratedKeys="true" keyProperty="id">
-        insert into configs(keys, text , mobile, password)
-        values (#{keys}, #{text}, #{mobile}, #{password})
+        insert into configs(`keys`,`text`,mobile,`password`)
+        values(#{keys},#{text},#{mobile},#{password})
     </insert>
     <resultMap id="configdMap" type="Configs">
         <id column="id" property="id"></id>
@@ -18,11 +18,16 @@
     <select id="queryConfig" resultMap="configdMap">
         select
             id,
-            keys,
-            password,
+            `keys`,
+            `password`,
             mobile,
-            text
+            `text`
         from configs
-        where keys = '#{keys}'
+        where `keys` = #{keys}
     </select>
+    <update id="updateConfig">
+        update configd
+        set `text`=#{text}
+        where keys= = #{keys}
+    </update>
 </mapper>

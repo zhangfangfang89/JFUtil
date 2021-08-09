@@ -5,6 +5,8 @@ import com.jf.util.common.ResultVo;
 import com.jf.util.entity.Configs;
 
 public interface ConfigsService {
-    ResultVo addIP(Configs configs);
-    ResultVo queryIp(Configs configs);
+    ResultVo addKeys(Configs configs);
+    ResultVo queryKeys(String keys);
+
+
 }

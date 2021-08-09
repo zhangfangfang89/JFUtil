@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultVo login(User user) {
+        System.out.println(user.getUsername());
         User u = userDao.queryUser(user.getUsername());
 
         ResultVo resultVo = new ResultVo();

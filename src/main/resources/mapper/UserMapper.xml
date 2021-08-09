@@ -6,8 +6,8 @@
 <mapper namespace="com.jf.util.dao.UserDao">
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        insert into user(username, mobile, password, token)
-        values (#{userName}, #{mobile}, #{passWord}, #{token})
+        insert into user(username, mobile, `password`, `token`)
+        values (#{userName}, #{mobile}, #{password}, #{token})
     </insert>
     <resultMap id="userMap" type="User">
         <id column="id" property="id"></id>
@@ -20,10 +20,10 @@
         select
         id,
         mobile,
-        password,
+        `password`,
         username,
-        token
+        `token`
         from user
-        where username = '#{username}'
+        where username = #{username}
     </select>
 </mapper>

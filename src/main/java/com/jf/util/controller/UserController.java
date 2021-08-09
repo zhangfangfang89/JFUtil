@@ -29,7 +29,6 @@ public class UserController extends BaseController{
         System.out.println(user);
         ResultVo resultVo = userService.login(user);
         return resultVo;
-
     }
     @GetMapping("/info")
     public ResultVo info(String token){

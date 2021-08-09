@@ -14,7 +14,7 @@ public class ConfigsServiceImpl implements ConfigsService {
     @Resource
     private  ConfigsDao  configsDao;
     @Override
-    public ResultVo addIP(Configs configs) {
+    public ResultVo addKeys(Configs configs) {
         JSONObject jsonObject = new JSONObject();
         ResultVo resultVo = new ResultVo();
         System.out.println(configs.getKeys());
@@ -26,16 +26,34 @@ public class ConfigsServiceImpl implements ConfigsService {
             resultVo.setMessage("保存成功");
             resultVo.setData(jsonObject);
         }else {
-            resultVo.setCode(50000);
-            resultVo.setMessage("已经存在了");
-            resultVo.setData(null);
+            configsDao.updateConfig(configs.getText(),configs.getKeys());
+            Configs ipConfigU = configsDao.queryConfig(configs.getKeys());
+            jsonObject.put("text",ipConfigU.getText());
+            resultVo.setCode(20000);
+            resultVo.setMessage("已经存在了,进行更新");
+            resultVo.setData(jsonObject);
         }
 
         return resultVo;
     }
 
     @Override
-    public ResultVo queryIp(Configs configs) {
-        return null;
+    public ResultVo queryKeys(String keys) {
+        JSONObject jsonObject = new JSONObject();
+        ResultVo resultVo = new ResultVo();
+        System.out.println(keys);
+        Configs ipConfig = configsDao.queryConfig(keys);
+        if (ipConfig!=null){
+            jsonObject.put("text",ipConfig.getText());
+            resultVo.setCode(20000);
+            resultVo.setMessage("查询成功");
+            resultVo.setData(jsonObject);
+        }else {
+            resultVo.setCode(20000);
+            resultVo.setMessage("");
+            resultVo.setData(null);
+        }
+
+        return resultVo;
     }
 }

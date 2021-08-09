@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConfigsDao {
     Integer insertConfig(Configs configs);
-    Configs queryConfig(@Param("keys") String keys);
+    Configs queryConfig(String keys);
+    void updateConfig(String text,String keys);
 }
