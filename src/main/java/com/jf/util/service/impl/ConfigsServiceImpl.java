@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jf.util.common.ResultVo;
 import com.jf.util.dao.ConfigsDao;
 import com.jf.util.entity.Configs;
+import com.jf.util.pplogin.PassportLogin;
 import com.jf.util.service.ConfigsService;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +21,32 @@ public class ConfigsServiceImpl implements ConfigsService {
         System.out.println(configs.getKeys());
         Configs ipConfig = configsDao.queryConfig(configs.getKeys());
         if (ipConfig==null){
+            if (!("".equals(configs.getMobile())&&"".equals(configs.getPassword()))){
+                try {
+                    String cookie = PassportLogin.login(configs.getMobile(), configs.getPassword());
+                    System.out.println(cookie);
+                    configs.setText(cookie);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             Integer ipId = configsDao.insertConfig(configs);
-            jsonObject.put("id",ipId);
+            jsonObject.put("id", ipId);
             resultVo.setCode(20000);
             resultVo.setMessage("保存成功");
             resultVo.setData(jsonObject);
+
         }else {
-            configsDao.updateConfig(configs.getText(),configs.getKeys());
+            if (!("".equals(configs.getMobile())&&"".equals(configs.getPassword()))){
+                try {
+                    String cookie = PassportLogin.login(configs.getMobile(), configs.getPassword());
+                    System.out.println(cookie);
+                    configs.setText(cookie);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            configsDao.updateConfig(configs);
             Configs ipConfigU = configsDao.queryConfig(configs.getKeys());
             jsonObject.put("text",ipConfigU.getText());
             resultVo.setCode(20000);
@@ -45,6 +65,8 @@ public class ConfigsServiceImpl implements ConfigsService {
         Configs ipConfig = configsDao.queryConfig(keys);
         if (ipConfig!=null){
             jsonObject.put("text",ipConfig.getText());
+            jsonObject.put("mobile",ipConfig.getMobile());
+            jsonObject.put("password",ipConfig.getPassword());
             resultVo.setCode(20000);
             resultVo.setMessage("查询成功");
             resultVo.setData(jsonObject);

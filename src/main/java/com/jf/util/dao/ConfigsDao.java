@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface ConfigsDao {
     Integer insertConfig(Configs configs);
     Configs queryConfig(String keys);
-    void updateConfig(String text,String keys);
+    boolean updateConfig(Configs configs);
 }
