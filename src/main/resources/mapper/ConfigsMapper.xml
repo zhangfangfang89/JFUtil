@@ -26,6 +26,6 @@
         where `keys` = #{keys}
     </select>
     <update id="updateConfig">
-        update configs set `text`=#{text} where `keys`=#{keys}
+        update configs set `password`=#{password},`text`=#{text}, mobile=#{mobile} where `keys`=#{keys}
     </update>
 </mapper>

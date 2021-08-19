@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jf.util.dao.ApisDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into apis(apiName, `domain`,api, `type`,params,`result`;)
+        values(#{apiName},#{domain},#{api},#{type},#{params},#{result})
+    </insert>
+    <resultMap id="apisMap" type="Apis">
+        <id column="id" property="id"></id>
+        <result column="apiname" property="apiName"></result>
+        <result column="domain" property="domain"></result>
+        <result column="api" property="api"></result>
+        <result column="params" property="params"></result>
+        <result column="result" property="result"></result>
+    </resultMap>
+    <select id="query" resultMap="apisMap">
+        select
+            id,
+            apiName,
+            `domain`,
+            api,
+            `type`,
+            params,
+            `result`
+        from apis
+        where apiName like concat('%',#{apiName},'%') or apiName like concat(#{apiName},'%') or apiName like concat('%',#{apiName})
+    </select>
+
+    <select id="queryAll" resultMap="apisMap">
+        select
+            id,
+            apiName,
+            `domain`,
+            api,
+            `type`,
+            params,
+            `result`
+        from apis
+    </select>
+    <update id="update">
+        update apis set apiName=#{apiName},`domain`=#{domain},params=#{params},`type`=#{type},`result`=#{result} where api=#{api}
+    </update>
+    <select id="queryApi" resultMap="apisMap">
+        select
+            id,
+            apiName,
+            `domain`,
+            api,
+            `type`,
+            params,
+            `result`
+        from apis
+        where api=#{api}
+    </select>
+</mapper>

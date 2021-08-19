@@ -42,6 +42,8 @@ public class ConfigsServiceImpl implements ConfigsService {
                     String cookie = PassportLogin.login(configs.getMobile(), configs.getPassword());
                     System.out.println(cookie);
                     configs.setText(cookie);
+                    configs.setMobile(configs.getMobile());
+                    configs.setPassword(configs.getPassword());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
