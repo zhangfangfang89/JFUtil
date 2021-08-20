@@ -19,7 +19,7 @@ public class ConfigsServiceImpl implements ConfigsService {
         JSONObject jsonObject = new JSONObject();
         ResultVo resultVo = new ResultVo();
         System.out.println(configs.getKeys());
-        Configs ipConfig = configsDao.queryConfig(configs.getKeys());
+        Configs ipConfig = configsDao.selectOne(configs);
         if (ipConfig==null){
             if (!("".equals(configs.getMobile())&&"".equals(configs.getPassword()))){
                 try {
@@ -30,7 +30,7 @@ public class ConfigsServiceImpl implements ConfigsService {
                     e.printStackTrace();
                 }
             }
-            Integer ipId = configsDao.insertConfig(configs);
+            Integer ipId = configsDao.insert(configs);
             jsonObject.put("id", ipId);
             resultVo.setCode(20000);
             resultVo.setMessage("保存成功");
@@ -48,8 +48,8 @@ public class ConfigsServiceImpl implements ConfigsService {
                     e.printStackTrace();
                 }
             }
-            configsDao.updateConfig(configs);
-            Configs ipConfigU = configsDao.queryConfig(configs.getKeys());
+            configsDao.updateByPrimaryKey(configs);
+            Configs ipConfigU = configsDao.selectOne(configs);
             jsonObject.put("text",ipConfigU.getText());
             resultVo.setCode(20000);
             resultVo.setMessage("已经存在了,进行更新");
@@ -64,7 +64,7 @@ public class ConfigsServiceImpl implements ConfigsService {
         JSONObject jsonObject = new JSONObject();
         ResultVo resultVo = new ResultVo();
         System.out.println(keys);
-        Configs ipConfig = configsDao.queryConfig(keys);
+        Configs ipConfig = configsDao.selectOneByExample(keys);
         if (ipConfig!=null){
             jsonObject.put("text",ipConfig.getText());
             jsonObject.put("mobile",ipConfig.getMobile());
