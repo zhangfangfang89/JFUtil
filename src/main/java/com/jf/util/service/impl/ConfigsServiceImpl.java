@@ -7,6 +7,7 @@ import com.jf.util.entity.Configs;
 import com.jf.util.pplogin.PassportLogin;
 import com.jf.util.service.ConfigsService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 
@@ -64,6 +65,7 @@ public class ConfigsServiceImpl implements ConfigsService {
         JSONObject jsonObject = new JSONObject();
         ResultVo resultVo = new ResultVo();
         System.out.println(keys);
+        Example example = new 
         Configs ipConfig = configsDao.selectOneByExample(keys);
         if (ipConfig!=null){
             jsonObject.put("text",ipConfig.getText());

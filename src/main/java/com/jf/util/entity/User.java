@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * <pre>
  *      业务描述：
@@ -18,6 +22,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "JDBC")
     private int id;
     private String username;
     private String mobile;

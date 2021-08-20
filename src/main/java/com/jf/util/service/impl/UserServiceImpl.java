@@ -7,6 +7,7 @@ import com.jf.util.entity.Token;
 import com.jf.util.entity.User;
 import com.jf.util.service.UserService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.beans.Transient;
