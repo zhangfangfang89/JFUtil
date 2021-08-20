@@ -43,16 +43,10 @@
     <update id="update">
         update apis set apiName=#{apiName},`domain`=#{domain},params=#{params},`type`=#{type},`result`=#{result} where api=#{api}
     </update>
-    <select id="queryApi" resultMap="apisMap">
+    <select id="queryApi" resultType="boolean">
         select
-            id,
-            apiName,
-            `domain`,
-            api,
-            `type`,
-            params,
-            `result`
+            count(1)
         from apis
-        where api=#{api}
+        where api=#{api} limit 1
     </select>
 </mapper>

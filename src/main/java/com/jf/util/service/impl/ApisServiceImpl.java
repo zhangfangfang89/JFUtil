@@ -24,10 +24,10 @@ public class ApisServiceImpl implements ApisService {
     public ResultVo insert(Apis apis) {
         ResultVo resultVo = new ResultVo();
         if (apis.getApiName().equals("")) {
-            Apis data = apisDao.queryAll();
+//            Apis data = apisDao.queryAll();
             resultVo.setCode(20000);
             resultVo.setMessage("查询成功");
-            resultVo.setData(data);
+//            resultVo.setData(data);
         }
         return resultVo;
     }
@@ -36,12 +36,8 @@ public class ApisServiceImpl implements ApisService {
     public ResultVo toRun(Apis apis) throws URISyntaxException {
 
         ResultVo resultVo = new ResultVo();
-        System.out.println(apisDao.queryApi(apis.getApi()));
-        if(apisDao.queryApi(apis.getApi())){
-            resultVo.setCode(50000);
-            resultVo.setMessage("已经存在这个接口了");
-            resultVo.setData("");
-        }else{
+        System.out.println(apisDao.existsWithPrimaryKey(apis));
+        if (!apisDao.existsWithPrimaryKey(apis)) {
             if (!apis.getDomain().contains(".com")){
                 String url = "http://"+apis.getDomain()+":18081"+apis.getApi();
                 Map<String,String> params =new HashMap<>();
@@ -59,6 +55,10 @@ public class ApisServiceImpl implements ApisService {
                 }
 
             }
+        } else {
+            resultVo.setCode(50000);
+            resultVo.setMessage("已经存在这个接口了");
+            resultVo.setData("");
         }
         return resultVo;
     }
