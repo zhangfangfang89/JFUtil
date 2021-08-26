@@ -122,6 +122,7 @@ public class PassportLogin {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("Referer", "https://mfangxin.58.com/m");
         headerMap.put("cookie", login(userName, passWord));
+        System.out.println(headerMap.get("cookie"));
         return headerMap;
     }
 

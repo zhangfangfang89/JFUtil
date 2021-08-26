@@ -1,12 +1,11 @@
 package com.jf.util.service;
 
 import com.jf.util.common.ResultVo;
-import com.jf.util.entity.Apis;
+import com.jf.util.entity.ApiManager;
 
-import java.net.URISyntaxException;
 
 public interface ApisService {
-
-    ResultVo insert(Apis apis);
-    ResultVo toRun(Apis apis) throws URISyntaxException;
+    ResultVo toRun(ApiManager apis);
+    ResultVo toSave(ApiManager apis);
+    ResultVo toSearch(String apiName);
 }

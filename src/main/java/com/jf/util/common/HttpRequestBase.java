@@ -24,9 +24,69 @@ import java.util.*;
 
 public class HttpRequestBase {
     private static CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+    public static String doGet(String url, Map<String,String> params,Map<String,String>headerM) throws URISyntaxException {
+        String contentType = (String) headerM.get("Content-Type");
+        URIBuilder uriBuilder = new URIBuilder(url);
+        String string = "";
+        if ("application/json;charset=UTF-8".equals(contentType)){
+            System.out.println("application/json;charset=UTF-8");
+            //json的传参方式
+        }else{
+            System.out.println("application/x-www-form-urlencoded; charset=utf-88");
+            Iterator intr = params.entrySet().iterator();
+            while (intr.hasNext()){
+                Map.Entry entry = (Map.Entry)intr.next();
+                String k = (String)entry.getKey();
+                String v = (String) entry.getValue();
+                uriBuilder.addParameter(k,v);
+            }
+        }
+        HttpGet httpGet = new HttpGet(uriBuilder.build());
+        //处理请求头
+        Iterator intrH = headerM.entrySet().iterator();
+        while (intrH.hasNext()){
+            Map.Entry entry = (Map.Entry)intrH.next();
+            String k = (String)entry.getKey();
+            String v = (String) entry.getValue();
+            httpGet.setHeader(new BasicHeader(k, v));
+        }
+        CloseableHttpResponse response = null;
+        JSONObject jsonObject = null;
+        try {
+            response = httpClient.execute(httpGet);
+            HttpEntity responseEntity = response.getEntity();
+            if (response.getStatusLine().getStatusCode() ==200) {
+                string = EntityUtils.toString(responseEntity);
+            }
+
+        } catch (ClientProtocolException e) {
+            string = "fail";
+
+        } catch (IOException e) {
+            string = "fail";
+        } catch (IllegalStateException e){
+            string = "fail";
+//        }finally {
+//            try {
+//                // 释放资源
+//                if (httpClient != null) {
+//                    httpClient.close();
+//                }
+//                if (response != null) {
+//                    response.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+        return string;
+    }
 
     public static JSONObject doGetJSON(String url, Map<String,String> params,Map<String,String>headerM) throws URISyntaxException {
         String contentType = (String) headerM.get("Content-Type");
+        if (Objects.isNull(contentType)){
+            contentType="58";
+        }
         URIBuilder uriBuilder = new URIBuilder(url);
 
         if (contentType.equals("application/json;charset=UTF-8")){
@@ -64,82 +124,17 @@ public class HttpRequestBase {
                 return jsonObject;
             }
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            return jsonObject;
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 释放资源
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return jsonObject;
         }
         return jsonObject;
     }
-    public static String doGet(String url, Map<String,String> params,Map<String,String>headerM) throws URISyntaxException {
+    public static JSONObject doPostJSON(String url, Map<String,String> params,Map<String,String>headerM) throws URISyntaxException, UnsupportedEncodingException {
         String contentType = (String) headerM.get("Content-Type");
-        URIBuilder uriBuilder = new URIBuilder(url);
-
-        if (contentType.equals("application/json;charset=UTF-8")){
-            System.out.println("application/json;charset=UTF-8");
-            //json的传参方式
-        }else{
-            System.out.println("application/x-www-form-urlencoded; charset=utf-88");
-            Iterator intr = params.entrySet().iterator();
-            while (intr.hasNext()){
-                Map.Entry entry = (Map.Entry)intr.next();
-                String k = (String)entry.getKey();
-                String v = (String) entry.getValue();
-                uriBuilder.addParameter(k,v);
-            }
+        if (Objects.isNull(contentType)){
+            contentType="58";
         }
-        HttpGet httpGet = new HttpGet(uriBuilder.build());
-        //处理请求头
-        Iterator intrH = headerM.entrySet().iterator();
-        while (intrH.hasNext()){
-            Map.Entry entry = (Map.Entry)intrH.next();
-            String k = (String)entry.getKey();
-            String v = (String) entry.getValue();
-            httpGet.setHeader(new BasicHeader(k, v));
-        }
-        CloseableHttpResponse response = null;
-        JSONObject jsonObject = null;
-        try {
-            response = httpClient.execute(httpGet);
-            HttpEntity responseEntity = response.getEntity();
-            System.out.println(responseEntity);
-            if (response.getStatusLine().getStatusCode() ==200) {
-                String string = EntityUtils.toString(responseEntity);
-
-                return string;
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 释放资源
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
-    public static JSONObject doPost(String url, Map<?,?> params,Map<?,?>headerM) throws URISyntaxException, UnsupportedEncodingException {
-        String contentType = (String) headerM.get("Content-Type");
         HttpPost httpPost = new HttpPost(url);
         UrlEncodedFormEntity formEntity = null;
         //处理请求头
@@ -180,21 +175,9 @@ public class HttpRequestBase {
                 return jsonObject;
             }
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            return jsonObject;
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 释放资源
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return jsonObject;
         }
         return jsonObject;
     }
@@ -202,9 +185,7 @@ public class HttpRequestBase {
     public static void main(String[] args) throws URISyntaxException {
         HashMap<String,String> p = new HashMap<>();
         HashMap<String,String> h = new HashMap<>();
-        p.put("keys","domain");
-        h.put("Content-Type","application/x-www-form-urlencoded; charset=utf-8");
-        HttpRequestBase.doGet("http://localhost:8080/configs/gettext",p,h);
+
 
 
     }

@@ -22,8 +22,8 @@ public class ConfigsController extends BaseController{
     }
 
     @GetMapping("/gettext")
-    public ResultVo getText(String keys){
-        ResultVo resultVo = configsService.queryKeys(keys);
+    public ResultVo getText(String keyName){
+        ResultVo resultVo = configsService.queryKeys(keyName);
         return resultVo;
     }
 }

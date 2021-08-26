@@ -15,12 +15,17 @@ import javax.annotation.Resource;
 public class ConfigsServiceImpl implements ConfigsService {
     @Resource
     private  ConfigsDao  configsDao;
+
     @Override
     public ResultVo addKeys(Configs configs) {
         JSONObject jsonObject = new JSONObject();
         ResultVo resultVo = new ResultVo();
-        System.out.println(configs.getKeys());
-        Configs ipConfig = configsDao.selectOne(configs);
+
+        Example example = new Example(Configs.class);
+        example.selectProperties("keyName","text","mobile","password");
+        example.createCriteria();
+        example.and().andEqualTo("keyName",configs.getKeyName());
+        Configs ipConfig = configsDao.selectOneByExample(example);
         if (ipConfig==null){
             if (!("".equals(configs.getMobile())&&"".equals(configs.getPassword()))){
                 try {
@@ -49,8 +54,11 @@ public class ConfigsServiceImpl implements ConfigsService {
                     e.printStackTrace();
                 }
             }
-            configsDao.updateByPrimaryKey(configs);
-            Configs ipConfigU = configsDao.selectOne(configs);
+            Configs record = new Configs();
+            record.setText(configs.getText());
+            configsDao.updateByExampleSelective(record,example);
+
+            Configs ipConfigU = configsDao.selectOneByExample(example);
             jsonObject.put("text",ipConfigU.getText());
             resultVo.setCode(20000);
             resultVo.setMessage("已经存在了,进行更新");
@@ -61,12 +69,16 @@ public class ConfigsServiceImpl implements ConfigsService {
     }
 
     @Override
-    public ResultVo queryKeys(String keys) {
+    public ResultVo queryKeys(String keyName) {
         JSONObject jsonObject = new JSONObject();
         ResultVo resultVo = new ResultVo();
-        System.out.println(keys);
-        Example example = new 
-        Configs ipConfig = configsDao.selectOneByExample(keys);
+        System.out.println(keyName);
+        Example example = new Example(Configs.class);
+        example.selectProperties("keyName","text","mobile","password");
+        example.createCriteria()
+                .andEqualTo("keyName",keyName);
+
+        Configs ipConfig = configsDao.selectOneByExample(example);
         if (ipConfig!=null){
             jsonObject.put("text",ipConfig.getText());
             jsonObject.put("mobile",ipConfig.getMobile());
