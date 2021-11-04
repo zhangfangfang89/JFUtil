@@ -29,9 +29,9 @@ public class ConfigsServiceImpl implements ConfigsService {
         if (ipConfig==null){
             if (!("".equals(configs.getMobile())&&"".equals(configs.getPassword()))){
                 try {
-                    String cookie = PassportLogin.login(configs.getMobile(), configs.getPassword());
-                    System.out.println(cookie);
-                    configs.setText(cookie);
+                    configs.setText(configs.getText());
+                    configs.setMobile(configs.getMobile());
+                    configs.setPassword(configs.getPassword());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -56,10 +56,14 @@ public class ConfigsServiceImpl implements ConfigsService {
             }
             Configs record = new Configs();
             record.setText(configs.getText());
+            record.setMobile(configs.getMobile());
+            record.setPassword(configs.getPassword());
             configsDao.updateByExampleSelective(record,example);
 
             Configs ipConfigU = configsDao.selectOneByExample(example);
             jsonObject.put("text",ipConfigU.getText());
+            jsonObject.put("mobile",ipConfigU.getMobile());
+            jsonObject.put("password",ipConfigU.getPassword());
             resultVo.setCode(20000);
             resultVo.setMessage("已经存在了,进行更新");
             resultVo.setData(jsonObject);

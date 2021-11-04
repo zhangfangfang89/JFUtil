@@ -11,6 +11,7 @@ import com.jf.util.entity.Configs;
 import com.jf.util.pplogin.PassportLogin;
 import com.jf.util.service.ApisService;
 import org.springframework.stereotype.Service;
+import sun.util.resources.cldr.st.CurrencyNames_st_LS;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -33,6 +34,43 @@ public class ApisServiceImpl implements ApisService {
             JSONArray paramsJSONArray = (JSONArray) JSONArray.parse(apis.getParams());
             try {
                 for (int i = 0; i < paramsJSONArray.size(); i++) {
+                    hearderM.clear();
+                    params.clear();
+                    if (paramsJSONArray.getJSONObject(i).getString("key").equals("mobile") || paramsJSONArray.getJSONObject(i).getString("key").equals("password")) {
+                        //处理输入是用户账号的批量删除
+                        JSONObject jsonObject = null;
+                        hearderM.clear();
+                        params.clear();
+                        params.put("pageNum","1");
+                        params.put("pageSize","300");
+                        params.put("status","120200");
+                        params.put("orderByWhere","121401");
+                        hearderM.put("Referer", "https://mfangxin.58.com/m");
+                        System.out.println(paramsJSONArray.getJSONObject(i).getString("value"));
+                        System.out.println(paramsJSONArray.getJSONObject(i+1).getString("value"));
+                        String cookie = PassportLogin.login(paramsJSONArray.getJSONObject(i).getString("value"), paramsJSONArray.getJSONObject(i+1).getString("value"));
+                        hearderM.put("cookie",cookie);
+                        String urlI= "https://jiazheng.58.com/api/v1/b/customers/pageInfo";
+                        jsonObject = HttpRequestBase.doGetJSON(urlI, params, hearderM);
+                        JSONArray dataL = jsonObject.getJSONObject("data").getJSONArray("list");
+
+                        for (int n = 0 ; n<dataL.size();n++){
+                            hearderM.clear();
+                            params.clear();
+
+                            String customerId = dataL.getJSONObject(n).getString("customerId");
+                            System.out.println(customerId+"::"+n);
+                            params.put("customerId",customerId);
+
+                            result = HttpRequestBase.doGet(url, params, hearderM);
+                            System.out.println(result);
+
+
+                        }
+                        return result;
+
+                    }
+
                     if (paramsJSONArray.getJSONObject(i).getString("key").equals("customerId")) {
                         params.put("customerId", paramsJSONArray.getJSONObject(i).getString("value"));
                         result = HttpRequestBase.doGet(url, params, hearderM);
@@ -40,9 +78,6 @@ public class ApisServiceImpl implements ApisService {
                         params.put(paramsJSONArray.getJSONObject(i).getString("key"), paramsJSONArray.getJSONObject(i).getString("value"));
                         result = HttpRequestBase.doGet(url, params, hearderM);
 
-                    }
-                    if (paramsJSONArray.getJSONObject(i).getString("key").equals("mobile") || paramsJSONArray.getJSONObject(i).getString("key").equals("password")) {
-                        //处理输入是用户账号的批量删除
                     }
                 }
             }catch (Exception e){
@@ -99,18 +134,24 @@ public class ApisServiceImpl implements ApisService {
         example.createCriteria();
         example.and()
                 .andEqualTo("api",apis.getApi());
-        if (Objects.isNull(apisDao.selectOneByExample(example))) {
+
             if (!apis.getDomain().contains(".com")){
+
                 String result = ipApi(apis);
                 if(result.equals("true")){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("result","true");
+
                     resultVo.setCode(20000);
                     resultVo.setMessage("成功");
-                    resultVo.setData("true");
+                    resultVo.setData(JSONObject.toJSONString(jsonObject));
                 }
                 if(result.equals("false")){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("result","false");
                     resultVo.setCode(20000);
                     resultVo.setMessage("成功");
-                    resultVo.setData("false");
+                    resultVo.setData(JSONObject.toJSONString(jsonObject));
                 }
                 if (result.equals("fail")){
                     resultVo.setCode(50000);
@@ -121,20 +162,20 @@ public class ApisServiceImpl implements ApisService {
                 //业务的api
                 JSONObject jsonObject = businessApi(apis);
                 if (Objects.nonNull(jsonObject)){
+                    JSONObject jsonObjectAfter = new JSONObject();
+                    jsonObjectAfter.put("result",jsonObject);
+                    System.out.println(jsonObjectAfter);
                     resultVo.setCode(20000);
                     resultVo.setMessage("成功");
-                    resultVo.setData(jsonObject);
+                    resultVo.setData(jsonObjectAfter);
                 }else {
                     resultVo.setCode(50000);
                     resultVo.setMessage("请确认输入的信息对吗？");
                     resultVo.setData("");
                 }
             }
-        } else {
-            resultVo.setCode(50000);
-            resultVo.setMessage("已经存在这个接口了");
-            resultVo.setData("");
-        }
+
+
 
         return resultVo;
     }

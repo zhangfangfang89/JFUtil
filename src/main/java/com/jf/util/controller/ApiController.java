@@ -27,8 +27,6 @@ public class ApiController extends BaseController {
 
     @PostMapping(value = "/run")
     public ResultVo runApi(@RequestBody ApiManager apis){
-
-        System.out.println(apis);
         ResultVo resultVo = new ResultVo();
         resultVo = apisService.toRun(apis);
 
